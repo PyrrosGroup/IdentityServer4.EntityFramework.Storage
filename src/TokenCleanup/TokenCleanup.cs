@@ -70,12 +70,17 @@ namespace IdentityServer4.EntityFramework
         /// </summary>
         public void Stop()
         {
-            if (_source == null) throw new InvalidOperationException("Not started. Call Start first.");
+            if (_source != null)
+            {
+                _logger.LogDebug("Stopping grant removal");
 
-            _logger.LogDebug("Stopping grant removal");
-
-            _source.Cancel();
-            _source = null;
+                _source.Cancel();
+                _source = null;
+            }
+            else
+            {
+                _logger.LogDebug("Not started. Call Start first.");
+            }
         }
 
         private async Task StartInternalAsync(CancellationToken cancellationToken)
